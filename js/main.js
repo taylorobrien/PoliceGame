@@ -1,6 +1,6 @@
 window.onload = function() {
  var game = new Phaser.Game( 800, 600, Phaser.AUTO, 'game', { preload:
-preload, create: create, update: update} );
+preload, create: create, update: update, render: render} );
 
 
 function preload() {
@@ -8,9 +8,6 @@ function preload() {
     this.game.load.image('person', '/assets/heart1.png');
 	this.game.load.spritesheet('guy','/assets/police-spritesheet.png',30,36.5,12);
 	this.game.load.image('background', '/assets/tilebackground2.jpg');
-this.load.tilemap('level1', 'assets/tilemaps/policemap.json', null,
-Phaser.Tilemap.TILED_JSON);
-    this.load.image('gameTiles', 'assets/images/TilePolice.png');
 	this.load.image('key', 'assets/key2.png');
 	this.load.image('door', 'assets/door.png');
 this.game.load.spritesheet('zombleft','/assets/zombieleft.png',57,52,7);
