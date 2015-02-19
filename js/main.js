@@ -6,8 +6,8 @@ preload, create: create, update: update, render: render} );
 function preload() {
 	game.load.spritesheet('guy','/assets/police-spritesheet.png',30,36.5,12);
 	game.load.image('background', '/assets/tilebackground2.jpg');
-	load.image('key', 'assets/key2.png');
-	load.image('door', 'assets/door.png');
+	game.load.image('key', 'assets/key2.png');
+	game.load.image('door', 'assets/door.png');
 game.load.spritesheet('zombleft','/assets/zombieleft.png',57,52,7);
 game.load.spritesheet('zombright','/assets/zombieright.png',57.12,52,7);
 
