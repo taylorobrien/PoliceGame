@@ -10,8 +10,8 @@ function preload() {
 	game.load.image('door', 'assets/door.png');
 game.load.spritesheet('zombleft','assets/zombieleft.png',57,52,7);
 game.load.spritesheet('zombright','assets/zombieright.png',57.12,52,7);
-    game.load.audio('song',['assets/fallen-angel.mp3',
-'assets/fallen-angel.ogg']);
+    game.load.audio('song',['assets/Fallen-Angel.mp3',
+'assets/Fallen-Angel.ogg']);
 	game.load.image('bullet', 'assets/bullet.png');
 	game.load.image('gun', 'assets/gun.png');
 	game.load.audio('gunshot',['assets/gunshot.mp3', 'assets/gunshot.ogg']);
