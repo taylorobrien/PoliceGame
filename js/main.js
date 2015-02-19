@@ -10,8 +10,13 @@ function preload() {
 	game.load.image('door', 'assets/door.png');
 game.load.spritesheet('zombleft','assets/zombieleft.png',57,52,7);
 game.load.spritesheet('zombright','assets/zombieright.png',57.12,52,7);
+    game.load.audio('song',['assets/fallen-angel.mp3',
+'assets/fallen-angel.ogg']);
 	game.load.image('bullet', 'assets/bullet.png');
 	game.load.image('gun', 'assets/gun.png');
+	game.load.audio('gunshot',['assets/gunshot.mp3', 'assets/gunshot.ogg']);
+	game.load.image('block', 'assets/block1.png');
+	game.load.image('block5', 'assets/block-5.png');
 
 }
 
@@ -42,6 +47,12 @@ var sprite;
 var sprite2;
 var hasgun = false;
 var score = 0;
+var music;
+var gunshot;
+var block;
+var block2;
+var blocks2;
+var block55;
 
 function create() {
     game.world.setBounds(-1000, -1000, 2000, 2000);
@@ -54,6 +65,9 @@ function create() {
 
     //this.backgroundlayer = this.map.createLayer('backgroundLayer');
     //this.blockedLayer = this.map.createLayer('blockedLayer');
+
+	music = game.add.audio('song');
+	music.play();
 
     //collision on blockedLayer
     //this.map.setCollisionBetween(1, 100000, true, 'blockedLayer');
@@ -87,6 +101,14 @@ function create() {
     gun = game.add.sprite(750, 100, 'gun');
     game.physics.enable(gun, Phaser.Physics.ARCADE);
     gun.scale.set(.05,.05);
+
+	blocks = game.add.group();
+	blocks.enableBody = true;
+	blocks2 = game.add.group();
+	blocks2.enableBody = true;
+
+
+
 
     player = game.add.sprite(32, 32, 'guy');
     game.physics.enable(player, Phaser.Physics.ARCADE);
@@ -125,6 +147,10 @@ function create() {
 	game.time.events.repeat(Phaser.Timer.SECOND * .25, 10000, leftcome, this);
 	game.time.events.repeat(Phaser.Timer.SECOND * .25, 10000, rightcome,
 this);
+	game.time.events.repeat(Phaser.Timer.SECOND * .0025, 30, createblock,
+this);
+	game.time.events.repeat(Phaser.Timer.SECOND * .0025, 30, createblock2,
+this);
 	//game.time.events.loop(1500, leftcome, this);
 	//game.time.events.loop(1500, rightcome, this);
 
@@ -153,6 +179,24 @@ function leftcome(){
 }
 
 
+function createblock2(){
+    block55 = blocks2.create(game.world.randomX, game.world.randomY,
+'block5');
+    game.physics.enable(block55, Phaser.Physics.ARCADE);
+    block55.scale.set(1,2);
+    block55.body.immovable = true;
+
+}
+
+function createblock(){
+    block2 = blocks.create(game.world.randomX, game.world.randomY, 'block');
+    game.physics.enable(block2, Phaser.Physics.ARCADE);
+    block2.scale.set(2,1);
+    block2.body.immovable = true;
+
+}
+
+
 function rightcome(){
     ZL = zombiesl.create(game.world.randomX, game.world.randomY,
 'zombright');
@@ -172,6 +216,7 @@ function getkey(body1, body2){
 function enterdoor(body1, body2){
 	if(haskey != false){
 		body1.kill();
+		game.paused = true;
 	}
 	else{
 	
@@ -195,10 +240,16 @@ function gamepause(){
 	game.paused = true;
 }
 
+function nothing(){
+
+}
+
 function fire () {
 if(hasgun == true){
     if (game.time.now > nextFire && bullets.countDead() > 0)
     {
+	gunshot = game.add.audio('gunshot');
+	gunshot.play();
         nextFire = game.time.now + fireRate;
 
         var bullet = bullets.getFirstExists(false);
@@ -288,6 +339,8 @@ else if (cursors.up.isDown)
 	game.world.wrap(ZR, 0, true);
 game.physics.arcade.collide(gun, player, getgun, null, this);
     game.physics.arcade.collide(key, player, getkey, null, this);
+    game.physics.arcade.collide(blocks, player, nothing, null, this);
+game.physics.arcade.collide(blocks2, player, nothing, null, this);
  game.physics.arcade.overlap(bullets, zombiesr, kz, null, this);
  game.physics.arcade.overlap(bullets, zombiesl, kz, null, this);
     game.physics.arcade.overlap(player, door, enterdoor, null, this);
@@ -312,5 +365,7 @@ function render () {
 //http://i1081.photobucket.com/albums/j355/Shaddowval/ModernNPC1_zps0569f73a.png
 //https://wiki.themanaworld.org/images/d/da/Example-skeleton.png
 //http://www.springfield-armory.com/wp-content/uploads/2014/03/XD9649HCSP06_1200x782.png
+//http://www.newgrounds.com/audio/listen/594917
+//http://www.soundjay.com/gun-sound-effect.html
 }
 
