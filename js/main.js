@@ -1,11 +1,10 @@
-var game = new Phaser.Game(800, 450, Phaser.AUTO, 'game');
-var GameState = function(game) {
-};
-//collect all officers/police equipment before the zombies do
+window.onload = function() {
+ var game = new Phaser.Game( 800, 600, Phaser.AUTO, 'game', { preload:
+preload, create: create, update: update} );
 
 
-// Load images and sounds
-GameState.prototype.preload = function() {
+function preload() {
+
     this.game.load.image('person', '/assets/heart1.png');
 	this.game.load.spritesheet('guy','/assets/police-spritesheet.png',30,36.5,12);
 	this.game.load.image('background', '/assets/tilebackground2.jpg');
@@ -16,7 +15,8 @@ Phaser.Tilemap.TILED_JSON);
 	this.load.image('door', 'assets/door.png');
 this.game.load.spritesheet('zombleft','/assets/zombieleft.png',57,52,7);
 this.game.load.spritesheet('zombright','/assets/zombieright.png',57.12,52,7);
-};
+
+}
 
 var guy;
 var player;
@@ -38,10 +38,7 @@ var health = 100;
 var zombiesr;
 var zombiesl;
 
-
-
-// Setup the example
-GameState.prototype.create = function() {
+function create() {
     game.world.setBounds(-1000, -1000, 2000, 2000);
 
     //  Our tiled scrolling background
@@ -115,15 +112,9 @@ GameState.prototype.create = function() {
 
 cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-};
 
+}
 
-/*function leftcome() {
-
-var newleft = zombiesr.create(game.world.randomX, -0, 'ZR');
-
-
-}*/
 
 function getkey(body1, body2){
 
@@ -146,12 +137,10 @@ function hitzombie(body1, body2){
 
 }
 
+function update() {
 
 
-// The update() method is called every frame
-GameState.prototype.update = function() {
-
-    land.tilePosition.x = -game.camera.x;
+   land.tilePosition.x = -game.camera.x;
     land.tilePosition.y = -game.camera.y;
     player.body.velocity.x = 0;
     player.body.velocity.y = 0;
@@ -220,15 +209,16 @@ else if (cursors.up.isDown)
     game.physics.arcade.overlap(player, ZR, hitzombie, null, this);
     game.physics.arcade.overlap(player, ZL, hitzombie, null, this);
 
-};
+}
 
-GameState.prototype.render = function(){
-	game.debug.text('Health: ' + health, 32, 32);
-};
+function render () {
 
-game.state.add('game', GameState, true);
+     game.debug.text('Health: ' + health, 32, 32);
 
-
+}
 //http://www.rhinebeckcfc.com/themag1.jpg
 //http://thumbs.dreamstime.com/z/abstract-square-tile-seamless-white-gray-texture-background-same-transparency-grid-39463263.jpg
 //http://i1081.photobucket.com/albums/j355/Shaddowval/ModernNPC1_zps0569f73a.png
+
+}
+
