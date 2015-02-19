@@ -10,6 +10,7 @@ function preload() {
 	game.load.image('door', 'assets/door.png');
 game.load.spritesheet('zombleft','assets/zombieleft.png',57,52,7);
 game.load.spritesheet('zombright','assets/zombieright.png',57.12,52,7);
+	game.load.image('bullet', 'assets/bullet.png');
 
 }
 
@@ -32,6 +33,12 @@ var ZL;
 var health = 100;
 var zombiesr;
 var zombiesl;
+var bullets;
+var bullet;
+var fireRate = 100;
+var nextFire = 0;
+var sprite;
+var sprite2;
 
 function create() {
     game.world.setBounds(-1000, -1000, 2000, 2000);
@@ -58,6 +65,14 @@ function create() {
     // Set stage background color
     //this.game.stage.backgroundColor = 0x4488cc;
 
+    bullets = game.add.group();
+    bullets.enableBody = true;
+    bullets.physicsBodyType = Phaser.Physics.ARCADE;
+
+    bullets.createMultiple(50, 'bullet');
+    bullets.setAll('checkWorldBounds', true);
+    bullets.setAll('outOfBoundsKill', true);
+
     key = game.add.sprite(-10, -10, 'key');
     game.physics.enable(key, Phaser.Physics.ARCADE);
     key.scale.set(.05,.05);
@@ -76,13 +91,13 @@ function create() {
     ZL = game.add.sprite(-10, 32, 'zombright');
     game.physics.enable(ZL, Phaser.Physics.ARCADE);
     //player.body.bounce.y = 0.2;
-    ZL.body.collideWorldBounds = true;
+    //ZL.body.collideWorldBounds = true;
     ZL.body.velocity.x = 100;
 
     ZR = game.add.sprite(10, 32, 'zombleft');
     game.physics.enable(ZR, Phaser.Physics.ARCADE);
     //player.body.bounce.y = 0.2;
-    ZR.body.collideWorldBounds = true;
+    //ZR.body.collideWorldBounds = true;
     ZR.body.velocity.x = -100;
     zombiesr = game.add.group();
     zombiesr.enableBody = true;
@@ -100,7 +115,8 @@ function create() {
     player.animations.add('idle', [0,1,2], 3, true);
     player.animations.add('up', [9,10,11], 3, true);
 
-
+	game.time.events.repeat(Phaser.Timer.SECOND * .1, 100, leftcome, this);
+	game.time.events.repeat(Phaser.Timer.SECOND * .1, 100, rightcome, this);
 	//game.time.events.loop(1500, leftcome, this);
 	//game.time.events.loop(1500, rightcome, this);
 
@@ -109,6 +125,29 @@ cursors = game.input.keyboard.createCursorKeys();
 
 }
 
+
+function leftcome(){
+	var sprite =
+game.add.sprite(game.world.randomX,game.world.randomY,'zombleft');
+	sprite.frame = 0;
+	sprite.animations.add('ani', [0,1,2,3,4,5,6], 7, true);
+   	game.physics.enable(sprite, Phaser.Physics.ARCADE);
+	sprite.body.velocity.x = -100;
+	sprite.play('ani')
+
+}
+
+
+function rightcome(){
+	var sprite2 =
+game.add.sprite(game.world.randomX,game.world.randomY,'zombright');
+	sprite2.frame = 0;
+	sprite2.animations.add('ani', [0,1,2,3,4,5,6], 7, true);
+   	game.physics.enable(sprite2, Phaser.Physics.ARCADE);
+	sprite2.body.velocity.x = 100;
+	sprite2.play('ani')
+
+}
 
 function getkey(body1, body2){
 
@@ -131,6 +170,27 @@ function hitzombie(body1, body2){
 
 }
 
+
+function kz(body3, body4){
+	body4.kill();
+}
+
+function fire () {
+
+    if (game.time.now > nextFire && bullets.countDead() > 0)
+    {
+        nextFire = game.time.now + fireRate;
+
+        var bullet = bullets.getFirstExists(false);
+
+        bullet.reset(player.x, player.y);
+
+        bullet.rotation = game.physics.arcade.moveToPointer(bullet,
+1000, game.input.activePointer, 500);
+    }
+
+}
+
 function update() {
 
 
@@ -139,6 +199,11 @@ function update() {
     player.body.velocity.x = 0;
     player.body.velocity.y = 0;
 
+
+    if (game.input.activePointer.isDown)
+    {
+        fire();
+    }
 if (cursors.left.isDown)
     {
         player.body.velocity.x = -250;
@@ -198,7 +263,10 @@ else if (cursors.up.isDown)
             facing = 'idle';
         }
     }
+	game.world.wrap(ZL, 0, true);
+	game.world.wrap(ZR, 0, true);
     game.physics.arcade.collide(key, player, getkey, null, this);
+ game.physics.arcade.overlap(bullets, sprite, kz, null, this);
     game.physics.arcade.overlap(player, door, enterdoor, null, this);
     game.physics.arcade.overlap(player, ZR, hitzombie, null, this);
     game.physics.arcade.overlap(player, ZL, hitzombie, null, this);
@@ -213,6 +281,6 @@ function render () {
 //http://www.rhinebeckcfc.com/themag1.jpg
 //http://thumbs.dreamstime.com/z/abstract-square-tile-seamless-white-gray-texture-background-same-transparency-grid-39463263.jpg
 //http://i1081.photobucket.com/albums/j355/Shaddowval/ModernNPC1_zps0569f73a.png
-
+//https://wiki.themanaworld.org/images/d/da/Example-skeleton.png
 }
 
