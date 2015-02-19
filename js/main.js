@@ -11,6 +11,7 @@ function preload() {
 game.load.spritesheet('zombleft','assets/zombieleft.png',57,52,7);
 game.load.spritesheet('zombright','assets/zombieright.png',57.12,52,7);
 	game.load.image('bullet', 'assets/bullet.png');
+	game.load.image('gun', 'assets/gun.png');
 
 }
 
@@ -39,6 +40,8 @@ var fireRate = 100;
 var nextFire = 0;
 var sprite;
 var sprite2;
+var hasgun = false;
+var score = 0;
 
 function create() {
     game.world.setBounds(-1000, -1000, 2000, 2000);
@@ -81,6 +84,10 @@ function create() {
     game.physics.enable(door, Phaser.Physics.ARCADE);
     door.scale.set(.25,.25);
 
+    gun = game.add.sprite(750, 100, 'gun');
+    game.physics.enable(gun, Phaser.Physics.ARCADE);
+    gun.scale.set(.05,.05);
+
     player = game.add.sprite(32, 32, 'guy');
     game.physics.enable(player, Phaser.Physics.ARCADE);
     player.body.bounce.y = 0.2;
@@ -88,13 +95,13 @@ function create() {
     player.body.setSize(20, 32, 5, 16);
 	game.camera.follow(player);
 
-    ZL = game.add.sprite(-10, 32, 'zombright');
+    ZL = game.add.sprite(-100, 320, 'zombright');
     game.physics.enable(ZL, Phaser.Physics.ARCADE);
     //player.body.bounce.y = 0.2;
     //ZL.body.collideWorldBounds = true;
     ZL.body.velocity.x = 100;
 
-    ZR = game.add.sprite(10, 32, 'zombleft');
+    ZR = game.add.sprite(-100, -200, 'zombleft');
     game.physics.enable(ZR, Phaser.Physics.ARCADE);
     //player.body.bounce.y = 0.2;
     //ZR.body.collideWorldBounds = true;
@@ -115,8 +122,9 @@ function create() {
     player.animations.add('idle', [0,1,2], 3, true);
     player.animations.add('up', [9,10,11], 3, true);
 
-	game.time.events.repeat(Phaser.Timer.SECOND * 1, 10000, leftcome, this);
-	game.time.events.repeat(Phaser.Timer.SECOND * 1, 10000, rightcome, this);
+	game.time.events.repeat(Phaser.Timer.SECOND * .25, 10000, leftcome, this);
+	game.time.events.repeat(Phaser.Timer.SECOND * .25, 10000, rightcome,
+this);
 	//game.time.events.loop(1500, leftcome, this);
 	//game.time.events.loop(1500, rightcome, this);
 
@@ -126,8 +134,15 @@ cursors = game.input.keyboard.createCursorKeys();
 }
 
 
+function getgun(body1, body2){
+	hasgun = true;
+	body1.kill();
+	
+
+}
+
 function leftcome(){
-    ZR = game.add.sprite(game.world.randomX, game.world.randomY,
+    ZR = zombiesr.create(game.world.randomX, game.world.randomY,
 'zombleft');
     game.physics.enable(ZR, Phaser.Physics.ARCADE);
     ZR.animations.add('walk',[0,1,2,3,4,5,6],7,true);
@@ -139,7 +154,7 @@ function leftcome(){
 
 
 function rightcome(){
-    ZL = game.add.sprite(game.world.randomX, game.world.randomY,
+    ZL = zombiesl.create(game.world.randomX, game.world.randomY,
 'zombright');
     game.physics.enable(ZL, Phaser.Physics.ARCADE);
     ZL.animations.add('walk',[0,1,2,3,4,5,6],7,true);
@@ -171,11 +186,17 @@ function hitzombie(body1, body2){
 
 
 function kz(body3, body4){
+	body3.kill();
 	body4.kill();
+	score ++;
+}
+
+function gamepause(){
+	game.paused = true;
 }
 
 function fire () {
-
+if(hasgun == true){
     if (game.time.now > nextFire && bullets.countDead() > 0)
     {
         nextFire = game.time.now + fireRate;
@@ -187,6 +208,7 @@ function fire () {
         bullet.rotation = game.physics.arcade.moveToPointer(bullet,
 1000, game.input.activePointer, 500);
     }
+}
 
 }
 
@@ -264,16 +286,24 @@ else if (cursors.up.isDown)
     }
 	game.world.wrap(ZL, 0, true);
 	game.world.wrap(ZR, 0, true);
+game.physics.arcade.collide(gun, player, getgun, null, this);
     game.physics.arcade.collide(key, player, getkey, null, this);
- game.physics.arcade.overlap(bullets, sprite, kz, null, this);
+ game.physics.arcade.overlap(bullets, zombiesr, kz, null, this);
+ game.physics.arcade.overlap(bullets, zombiesl, kz, null, this);
     game.physics.arcade.overlap(player, door, enterdoor, null, this);
-    game.physics.arcade.overlap(player, ZR, hitzombie, null, this);
+    game.physics.arcade.overlap(player, zombiesr, hitzombie, null, this);
+    game.physics.arcade.overlap(player, zombiesl, hitzombie, null, this);
+
     game.physics.arcade.overlap(player, ZL, hitzombie, null, this);
+
+    if (health < 0){
+	gamepause();
+	}
 
 }
 
 function render () {
-
+     game.debug.text('Score: ' + score, 700, 32);
      game.debug.text('Health: ' + health, 32, 32);
 
 }
@@ -281,5 +311,6 @@ function render () {
 //http://thumbs.dreamstime.com/z/abstract-square-tile-seamless-white-gray-texture-background-same-transparency-grid-39463263.jpg
 //http://i1081.photobucket.com/albums/j355/Shaddowval/ModernNPC1_zps0569f73a.png
 //https://wiki.themanaworld.org/images/d/da/Example-skeleton.png
+//http://www.springfield-armory.com/wp-content/uploads/2014/03/XD9649HCSP06_1200x782.png
 }
 
