@@ -82,13 +82,13 @@ GameState.prototype.create = function() {
     player.body.setSize(20, 32, 5, 16);
 	game.camera.follow(player);
 
-    ZL = game.add.sprite(32, 32, 'zombright');
+    ZL = game.add.sprite(-10, 32, 'zombright');
     game.physics.enable(ZL, Phaser.Physics.ARCADE);
     //player.body.bounce.y = 0.2;
     ZL.body.collideWorldBounds = true;
     ZL.body.velocity.x = 100;
 
-    ZR = game.add.sprite(32, 32, 'zombleft');
+    ZR = game.add.sprite(10, 32, 'zombleft');
     game.physics.enable(ZR, Phaser.Physics.ARCADE);
     //player.body.bounce.y = 0.2;
     ZR.body.collideWorldBounds = true;
