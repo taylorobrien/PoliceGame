@@ -4,12 +4,12 @@ preload, create: create, update: update, render: render} );
 
 
 function preload() {
-	this.game.load.spritesheet('guy','/assets/police-spritesheet.png',30,36.5,12);
-	this.game.load.image('background', '/assets/tilebackground2.jpg');
-	this.load.image('key', 'assets/key2.png');
-	this.load.image('door', 'assets/door.png');
-this.game.load.spritesheet('zombleft','/assets/zombieleft.png',57,52,7);
-this.game.load.spritesheet('zombright','/assets/zombieright.png',57.12,52,7);
+	game.load.spritesheet('guy','/assets/police-spritesheet.png',30,36.5,12);
+	game.load.image('background', '/assets/tilebackground2.jpg');
+	load.image('key', 'assets/key2.png');
+	load.image('door', 'assets/door.png');
+game.load.spritesheet('zombleft','/assets/zombieleft.png',57,52,7);
+game.load.spritesheet('zombright','/assets/zombieright.png',57.12,52,7);
 
 }
 
