@@ -73,11 +73,11 @@ function create() {
     bullets.setAll('checkWorldBounds', true);
     bullets.setAll('outOfBoundsKill', true);
 
-    key = game.add.sprite(-10, -10, 'key');
+    key = game.add.sprite(-500, -700, 'key');
     game.physics.enable(key, Phaser.Physics.ARCADE);
     key.scale.set(.05,.05);
 
-    door = game.add.sprite(50, 50, 'door');
+    door = game.add.sprite(800, 900, 'door');
     game.physics.enable(door, Phaser.Physics.ARCADE);
     door.scale.set(.25,.25);
 
@@ -115,8 +115,8 @@ function create() {
     player.animations.add('idle', [0,1,2], 3, true);
     player.animations.add('up', [9,10,11], 3, true);
 
-	game.time.events.repeat(Phaser.Timer.SECOND * .1, 100, leftcome, this);
-	game.time.events.repeat(Phaser.Timer.SECOND * .1, 100, rightcome, this);
+	game.time.events.repeat(Phaser.Timer.SECOND * 1, 10000, leftcome, this);
+	game.time.events.repeat(Phaser.Timer.SECOND * 1, 10000, rightcome, this);
 	//game.time.events.loop(1500, leftcome, this);
 	//game.time.events.loop(1500, rightcome, this);
 
@@ -127,25 +127,24 @@ cursors = game.input.keyboard.createCursorKeys();
 
 
 function leftcome(){
-	var sprite =
-game.add.sprite(game.world.randomX,game.world.randomY,'zombleft');
-	sprite.frame = 0;
-	sprite.animations.add('ani', [0,1,2,3,4,5,6], 7, true);
-   	game.physics.enable(sprite, Phaser.Physics.ARCADE);
-	sprite.body.velocity.x = -100;
-	sprite.play('ani')
+    ZR = game.add.sprite(game.world.randomX, game.world.randomY,
+'zombleft');
+    game.physics.enable(ZR, Phaser.Physics.ARCADE);
+    ZR.animations.add('walk',[0,1,2,3,4,5,6],7,true);
+    ZR.animations.play('walk', 2, true);
+    ZR.body.velocity.x = -100;
+
 
 }
 
 
 function rightcome(){
-	var sprite2 =
-game.add.sprite(game.world.randomX,game.world.randomY,'zombright');
-	sprite2.frame = 0;
-	sprite2.animations.add('ani', [0,1,2,3,4,5,6], 7, true);
-   	game.physics.enable(sprite2, Phaser.Physics.ARCADE);
-	sprite2.body.velocity.x = 100;
-	sprite2.play('ani')
+    ZL = game.add.sprite(game.world.randomX, game.world.randomY,
+'zombright');
+    game.physics.enable(ZL, Phaser.Physics.ARCADE);
+    ZL.animations.add('walk',[0,1,2,3,4,5,6],7,true);
+    ZL.animations.play('walk', 2, true);
+    ZL.body.velocity.x = 100;
 
 }
 
