@@ -14,6 +14,8 @@ Phaser.Tilemap.TILED_JSON);
     this.load.image('gameTiles', 'assets/images/TilePolice.png');
 	this.load.image('key', 'assets/key2.png');
 	this.load.image('door', 'assets/door.png');
+this.game.load.spritesheet('zombleft','/assets/zombieleft.png',57,52,7);
+this.game.load.spritesheet('zombright','/assets/zombieright.png',57.12,52,7);
 };
 
 var guy;
@@ -30,6 +32,12 @@ var land;
 var key;
 var door;
 var haskey = false;
+var ZR;
+var ZL;
+var health = 100;
+var zombiesr;
+var zombiesl;
+
 
 
 // Setup the example
@@ -74,33 +82,48 @@ GameState.prototype.create = function() {
     player.body.setSize(20, 32, 5, 16);
 	game.camera.follow(player);
 
+    ZL = game.add.sprite(32, 32, 'zombright');
+    game.physics.enable(ZL, Phaser.Physics.ARCADE);
+    //player.body.bounce.y = 0.2;
+    ZL.body.collideWorldBounds = true;
+    ZL.body.velocity.x = 100;
+
+    ZR = game.add.sprite(32, 32, 'zombleft');
+    game.physics.enable(ZR, Phaser.Physics.ARCADE);
+    //player.body.bounce.y = 0.2;
+    ZR.body.collideWorldBounds = true;
+    ZR.body.velocity.x = -100;
+    zombiesr = game.add.group();
+    zombiesr.enableBody = true;
+    zombiesl = game.add.group();
+    zombiesl.enableBody = true;
+
+    ZL.animations.add('walk',[0,1,2,3,4,5,6],7,true);
+    ZL.animations.play('walk', 2, true);
+    ZR.animations.add('walk',[0,1,2,3,4,5,6],7,true);
+    ZR.animations.play('walk', 2, true);
+
     player.animations.add('left', [3,4,5], 3, true);
     //player.animations.add('turn', [4], 20, true);
     player.animations.add('right', [6,7,8], 3, true);
     player.animations.add('idle', [0,1,2], 3, true);
     player.animations.add('up', [9,10,11], 3, true);
 
-    // The radius of the circle of light
-    this.LIGHT_RADIUS = 50;
 
-    // Create the shadow texture
-    this.shadowTexture = this.game.add.bitmapData(this.game.width,
-this.game.height);
+	//game.time.events.loop(1500, leftcome, this);
+	//game.time.events.loop(1500, rightcome, this);
 
-    // Create an object that will use the bitmap as a texture
-    var lightSprite = this.game.add.image(0, 0, this.shadowTexture);
-
-    // Set the blend mode to MULTIPLY. This will darken the colors of
-    // everything below this sprite.
-    lightSprite.blendMode = Phaser.blendModes.MULTIPLY;
-
-    // Simulate a pointer click/tap input at the center of the stage
-    // when the example begins running.
-    this.game.input.activePointer.x = this.game.width/2;
-    this.game.input.activePointer.y = this.game.height/2;
 cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 };
+
+
+/*function leftcome() {
+
+var newleft = zombiesr.create(game.world.randomX, -0, 'ZR');
+
+
+}*/
 
 function getkey(body1, body2){
 
@@ -118,6 +141,10 @@ function enterdoor(body1, body2){
 
 }
 
+function hitzombie(body1, body2){
+	  health = health-1;
+
+}
 
 
 
@@ -190,7 +217,13 @@ else if (cursors.up.isDown)
     }
     game.physics.arcade.collide(key, player, getkey, null, this);
     game.physics.arcade.overlap(player, door, enterdoor, null, this);
+    game.physics.arcade.overlap(player, ZR, hitzombie, null, this);
+    game.physics.arcade.overlap(player, ZL, hitzombie, null, this);
 
+};
+
+GameState.prototype.render = function(){
+	game.debug.text('Health: ' + health, 32, 32);
 };
 
 game.state.add('game', GameState, true);
