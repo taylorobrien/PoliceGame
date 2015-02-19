@@ -2,9 +2,10 @@ window.onload = function() {
  var game = new Phaser.Game( 800, 600, Phaser.AUTO, 'game', { preload:
 preload, create: create, update: update, render: render} );
 
-
+index.html
 function preload() {
-	game.load.spritesheet('guy','/assets/police-spritesheet.png',30,36.5,12);
+	
+game.load.spritesheet('guy','/assets/police-spritesheet.png',30,36.5,12);
 	game.load.image('background', '/assets/tilebackground2.jpg');
 	game.load.image('key', 'assets/key2.png');
 	game.load.image('door', 'assets/door.png');
