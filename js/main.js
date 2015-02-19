@@ -4,8 +4,6 @@ preload, create: create, update: update, render: render} );
 
 
 function preload() {
-
-    this.game.load.image('person', '/assets/heart1.png');
 	this.game.load.spritesheet('guy','/assets/police-spritesheet.png',30,36.5,12);
 	this.game.load.image('background', '/assets/tilebackground2.jpg');
 	this.load.image('key', 'assets/key2.png');
@@ -43,8 +41,7 @@ function create() {
     land.fixedToCamera = true;
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
-    this.map = this.game.add.tilemap('level1');
-    this.map.addTilesetImage('TilePolice', 'gameTiles');
+
     //this.backgroundlayer = this.map.createLayer('backgroundLayer');
     //this.blockedLayer = this.map.createLayer('blockedLayer');
 
