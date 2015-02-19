@@ -98,7 +98,7 @@ function create() {
     game.physics.enable(door, Phaser.Physics.ARCADE);
     door.scale.set(.25,.25);
 
-    gun = game.add.sprite(750, 100, 'gun');
+    gun = game.add.sprite(-600, 800, 'gun');
     game.physics.enable(gun, Phaser.Physics.ARCADE);
     gun.scale.set(.05,.05);
 
@@ -207,16 +207,22 @@ function rightcome(){
 
 }
 
+
 function getkey(body1, body2){
 
 	body1.kill();
 	haskey = true;
 }
 
+
 function enterdoor(body1, body2){
 	if(haskey != false){
 		body1.kill();
-		game.paused = true;
+	var style3 = {font: "30px Arial", fill:"#330F53"};
+	var scoringstuff = "Your score is: " + score;
+        var winstatement = 		game.add.text(500,700,scoringstuff,style3);
+//800 900
+		gamepause();
 	}
 	else{
 	
@@ -237,6 +243,7 @@ function kz(body3, body4){
 }
 
 function gamepause(){
+
 	game.paused = true;
 }
 
@@ -360,6 +367,29 @@ function render () {
      game.debug.text('Health: ' + health, 32, 32);
 
 }
+
+
+
+
+
+game.StateB = function (game) {
+
+    var text;
+	var style1;
+	var wintext;
+
+};
+
+game.StateB.prototype = {
+
+    create: function () {
+	game.stage.backgroundColor = '#008060';
+	style1 = {font: "30px Arial", fill:"#ff0044"};
+    	wintext = game.add.text(650, 15, "Score: 0",style1);
+
+}
+}
+
 //http://www.rhinebeckcfc.com/themag1.jpg
 //http://thumbs.dreamstime.com/z/abstract-square-tile-seamless-white-gray-texture-background-same-transparency-grid-39463263.jpg
 //http://i1081.photobucket.com/albums/j355/Shaddowval/ModernNPC1_zps0569f73a.png
